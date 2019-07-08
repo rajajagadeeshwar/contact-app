@@ -1,17 +1,17 @@
 package com.contactapp.model;
 
 public class Contact {
-	private long id;
+	private Long id;
 	private String name;
 	private String phonenumber;
 	private String businessnumber;
 	private String email;
 
-	public void setId(long id) {
+	public void setId(Long id) {
 		this.id = id;
 	}
 
-	public long getId() {
+	public Long getId() {
 		return this.id;
 	}
 
@@ -49,29 +49,14 @@ public class Contact {
 
 	@Override
 	public String toString() {
-
-/*		String classProperties = "id : " + this.id;
-		classProperties += " name : " + this.name; 
-		classProperties += "phonenumber:" + this.phonenumber;
-		classProperties += "businessnumber:" + this.businessnumber;
-		classProperties += "email:" + this.email;  
-		
-		return classProperties;
-	*/
-		
-		StringBuilder sb=new StringBuilder();
+		StringBuilder sb = new StringBuilder();
 		sb.append("id : " + this.id);
 		sb.append("\nname : " + this.name);
 		sb.append("\nphonenumber : " + this.phonenumber);
 		sb.append("\nbusinessnumber : " + this.businessnumber);
 		sb.append("\nemail: : " + this.email);
-		
+
 		return sb.toString();
-	
-	
-	
-	
-	
 	}
 
 }
