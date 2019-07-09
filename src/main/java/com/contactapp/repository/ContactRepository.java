@@ -1,8 +1,9 @@
 package com.contactapp.repository;
 
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
-import java.util.function.BiConsumer;
 
 import com.contactapp.model.Contact;
 
@@ -17,15 +18,16 @@ public class ContactRepository {
 		contact.setId(generatedId++);
 		
 		database.put(contact.getId(), contact);
-		
-		
-		database.forEach((key, value) -> {
-			System.out.println("Key " + key );
-			System.out.println("Value " + value);
-		});
-		
+	
 		return contact;
 	}
+	
+	
+	public List<Contact> findAll(){
+		
+		return new ArrayList<>(database.values());		
+	}
+	
 	
 	
 }

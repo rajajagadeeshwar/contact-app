@@ -1,5 +1,6 @@
 package com.contactapp;
 
+import java.util.List;
 import java.util.Scanner;
 
 import org.springframework.boot.autoconfigure.SpringBootApplication;
@@ -12,27 +13,6 @@ public class ContactAppApplication {
 
 	public static void main(String[] args) {
 
-//		Contact contact = new Contact();
-//		contact.setId(10);
-//		contact.setName("jag");
-//		contact.setPhonenumber("(514)707-3172");
-//		contact.setBusinessnumber("(514)707-3172");
-//		contact.setEmail("jagvankadari@gmail.com");
-
-		boolean condition = false;
-//		while(condition) {
-//			System.out.println("Entered Loop");
-//			condition = false;
-//			System.out.println(condition);
-//		}
-
-//		do {
-//			System.out.println("Entered Loop");
-//			condition = false;
-//			System.out.println(condition);
-//			
-//			
-//		}while(condition);
 		String option;
 		do {
 			System.out.println("choose an option");
@@ -44,16 +24,6 @@ public class ContactAppApplication {
 
 			Scanner sc1 = new Scanner(System.in);
 			option = sc1.nextLine();
-
-			/*
-			 * if(option.contentEquals("1")) { System.out.println("Opption 1 called"); }
-			 * else if(option.contentEquals("2")) { System.out.println("Opption 2 called");
-			 * } else if(option.contentEquals("3")) {
-			 * System.out.println("Opption 3 called"); } else if(option.contentEquals("4"))
-			 * { System.out.println("Opption 4 called"); } else {
-			 * System.out.println("Unknown option called"); }
-			 */
-
 			switch (option) {
  
 			case "1":
@@ -64,7 +34,7 @@ public class ContactAppApplication {
 				System.out.println("Opption 2 called");
 				break;
 			case "3":
-				System.out.println("Opption 3 called");
+				listAllContacts();
 				break;
 			case "4":
 				System.out.println("Opption 4 called");
@@ -80,11 +50,8 @@ public class ContactAppApplication {
 
 		System.out.println("loop exit");
 
-		
-		//		Contact contact= getContactFromInput();
-//		System.out.println(contact);
 	}
-
+	
 	public static Contact getContactFromInput() {
 		Scanner sc = new Scanner(System.in);
 
@@ -108,9 +75,25 @@ public class ContactAppApplication {
 
 		ContactRepository repository = new ContactRepository();
 		repository.save(contact);
+		
 		return contact;
 		
 		
 
+	}
+	
+	
+	public static void  listAllContacts() {
+		
+		ContactRepository repository = new ContactRepository();
+		List<Contact> contacts= repository.findAll();
+		
+		for (Contact contact: contacts) {
+			
+			System.out.println(contact);
+			System.out.println();
+		}
+				
+		
 	}
 }
