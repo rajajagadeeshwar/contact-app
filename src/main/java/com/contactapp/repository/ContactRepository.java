@@ -29,5 +29,11 @@ public class ContactRepository {
 	}
 	
 	
+	public Contact findById(Long id) {
+		return database.get(id);		
+
+	}
+	
+	
 	
 }

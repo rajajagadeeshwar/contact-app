@@ -1,6 +1,7 @@
 package com.contactapp;
 
 import java.util.List;
+import java.util.Objects;
 import java.util.Scanner;
 
 import org.springframework.boot.autoconfigure.SpringBootApplication;
@@ -20,15 +21,17 @@ public class ContactAppApplication {
 			System.out.println("1: create menu contact");
 			System.out.println("2: edit contact");
 			System.out.println("3: list all contacts");
-			System.out.println("4: exit");
+			System.out.println("4: find by id");
+			System.out.println("5: remove the contact");
+			System.out.println("6: exit");
 
 			Scanner sc1 = new Scanner(System.in);
 			option = sc1.nextLine();
 			switch (option) {
- 
+
 			case "1":
 				getContactFromInput();
-				
+
 				break;
 			case "2":
 				System.out.println("Opption 2 called");
@@ -37,7 +40,13 @@ public class ContactAppApplication {
 				listAllContacts();
 				break;
 			case "4":
-				System.out.println("Opption 4 called");
+				findById();
+				break;
+			case "5":
+				System.out.println("Opption 5 called");
+				break;
+			case "6":
+				System.out.println("Opption 6 called");
 				break;
 
 			default:
@@ -46,12 +55,12 @@ public class ContactAppApplication {
 				break;
 			}
 
-		} while (!option.equals("4"));
+		} while (!option.equals("6"));
 
 		System.out.println("loop exit");
 
 	}
-	
+
 	public static Contact getContactFromInput() {
 		Scanner sc = new Scanner(System.in);
 
@@ -75,25 +84,40 @@ public class ContactAppApplication {
 
 		ContactRepository repository = new ContactRepository();
 		repository.save(contact);
-		
+
 		return contact;
-		
-		
 
 	}
-	
-	
-	public static void  listAllContacts() {
-		
+
+	public static void listAllContacts() {
+
 		ContactRepository repository = new ContactRepository();
-		List<Contact> contacts= repository.findAll();
-		
-		for (Contact contact: contacts) {
-			
+		List<Contact> contacts = repository.findAll();
+
+		for (Contact contact : contacts) {
+
 			System.out.println(contact);
 			System.out.println();
 		}
-				
-		
+	}
+
+	public static void findById() {
+
+		System.out.println("Input user id");
+		Scanner sc = new Scanner(System.in);
+
+		Long id = sc.nextLong();
+
+		ContactRepository repository = new ContactRepository();
+		Contact contact = repository.findById(id);
+ 
+		if (Objects.nonNull(contact)) {
+			System.out.println("Contact found");
+			System.out.println(contact.toString());
+
+		} else {
+			System.out.println("Contact not found.");
+		}
+
 	}
 }
