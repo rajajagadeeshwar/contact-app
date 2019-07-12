@@ -4,15 +4,47 @@ import java.util.List;
 import java.util.Objects;
 import java.util.Scanner;
 
+import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
+import org.springframework.context.ApplicationContext;
 
 import com.contactapp.model.Contact;
+import com.contactapp.repository.ContRepository;
 import com.contactapp.repository.ContactRepository;
 
 @SpringBootApplication
 public class ContactAppApplication {
-
+	private static ContRepository repo;
+	
+	
 	public static void main(String[] args) {
+		ApplicationContext ctx = SpringApplication.run(ContactAppApplication.class, args);
+		
+		repo = (ContRepository) ctx.getBean("contRepository");
+		
+		
+		Contact jag = new Contact();
+		jag.setName("Jag");
+		jag.setPhonenumber("123456");
+		jag.setBusinessnumber("456789");
+		jag.setEmail("email@jag.com");
+
+		Contact evo = new Contact();
+		evo.setName("Evo");
+		evo.setPhonenumber("44444");
+		evo.setBusinessnumber("555555");
+		evo.setEmail("email@evo.com");
+
+		Contact joe = new Contact();
+		joe.setName("Joe");
+		joe.setPhonenumber("9999999");
+		joe.setBusinessnumber("8888888");
+		joe.setEmail("email@joe.com");
+
+		ContactRepository repository = new ContactRepository();
+		repository.save(jag);
+		repository.save(evo);
+		repository.save(joe);
 
 		String option;
 		do {
@@ -34,7 +66,7 @@ public class ContactAppApplication {
 
 				break;
 			case "2":
-				System.out.println("Opption 2 called");
+				editContact();
 				break;
 			case "3":
 				listAllContacts();
@@ -43,7 +75,7 @@ public class ContactAppApplication {
 				findById();
 				break;
 			case "5":
-				System.out.println("Opption 5 called");
+				removeContactById();
 				break;
 			case "6":
 				System.out.println("Opption 6 called");
@@ -83,7 +115,8 @@ public class ContactAppApplication {
 		contact.setEmail(email);
 
 		ContactRepository repository = new ContactRepository();
-		repository.save(contact);
+//		repository.save(contact);
+		repo.save(contact);
 
 		return contact;
 
@@ -109,8 +142,9 @@ public class ContactAppApplication {
 		Long id = sc.nextLong();
 
 		ContactRepository repository = new ContactRepository();
-		Contact contact = repository.findById(id);
- 
+//		Contact contact = repository.findById(id);
+		Contact contact = repo.findById(id).get();
+
 		if (Objects.nonNull(contact)) {
 			System.out.println("Contact found");
 			System.out.println(contact.toString());
@@ -120,4 +154,50 @@ public class ContactAppApplication {
 		}
 
 	}
+
+	public static void editContact() {
+
+		System.out.println("Input user id");
+		Scanner sc = new Scanner(System.in);
+		Long id = sc.nextLong();
+		sc.nextLine();
+		ContactRepository repository = new ContactRepository();
+
+		Contact contact = repository.findById(id);
+
+		System.out.println("Input the new name:");
+		String name = sc.nextLine();
+
+		System.out.println("Input the new phone number:");
+		String phoneNumber = sc.nextLine();
+
+		System.out.println("Input the new business number:");
+		String businessNumber = sc.nextLine();
+
+		System.out.println("Input the new email:");
+		String email = sc.nextLine();
+
+		contact.setName(name);
+		contact.setPhonenumber(phoneNumber);
+		contact.setBusinessnumber(businessNumber);
+		contact.setEmail(email);
+		
+		repo.save(contact);
+
+	}
+
+	public static void removeContactById() {
+		
+		System.out.println("Enter the id to remove");
+		Scanner sc= new Scanner(System.in);
+		Long id = sc.nextLong();	
+		sc.nextLine();
+		ContactRepository repository= new ContactRepository();
+//		repository.removeContact(id);
+		
+		repo.deleteById(id);
+		
+		
+	}
+	
 }

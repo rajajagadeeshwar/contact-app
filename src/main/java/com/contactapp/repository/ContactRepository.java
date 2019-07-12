@@ -34,6 +34,10 @@ public class ContactRepository {
 
 	}
 	
+	public void removeContact(Long id) {
+		database.remove(id);
+	}
+	
 	
 	
 }
