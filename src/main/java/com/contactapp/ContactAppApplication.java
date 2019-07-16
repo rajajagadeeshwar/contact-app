@@ -4,25 +4,16 @@ import java.util.List;
 import java.util.Objects;
 import java.util.Scanner;
 
-import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
-import org.springframework.context.ApplicationContext;
 
 import com.contactapp.model.Contact;
-import com.contactapp.repository.ContRepository;
 import com.contactapp.repository.ContactRepository;
 
 @SpringBootApplication
 public class ContactAppApplication {
-	private static ContRepository repo;
-	
-	
+
 	public static void main(String[] args) {
-		ApplicationContext ctx = SpringApplication.run(ContactAppApplication.class, args);
-		
-		repo = (ContRepository) ctx.getBean("contRepository");
-		
-		
+
 		Contact jag = new Contact();
 		jag.setName("Jag");
 		jag.setPhonenumber("123456");
@@ -115,8 +106,7 @@ public class ContactAppApplication {
 		contact.setEmail(email);
 
 		ContactRepository repository = new ContactRepository();
-//		repository.save(contact);
-		repo.save(contact);
+		repository.save(contact);
 
 		return contact;
 
@@ -142,8 +132,7 @@ public class ContactAppApplication {
 		Long id = sc.nextLong();
 
 		ContactRepository repository = new ContactRepository();
-//		Contact contact = repository.findById(id);
-		Contact contact = repo.findById(id).get();
+		Contact contact = repository.findById(id);
 
 		if (Objects.nonNull(contact)) {
 			System.out.println("Contact found");
@@ -181,23 +170,18 @@ public class ContactAppApplication {
 		contact.setPhonenumber(phoneNumber);
 		contact.setBusinessnumber(businessNumber);
 		contact.setEmail(email);
-		
-		repo.save(contact);
 
 	}
 
 	public static void removeContactById() {
-		
+
 		System.out.println("Enter the id to remove");
-		Scanner sc= new Scanner(System.in);
-		Long id = sc.nextLong();	
+		Scanner sc = new Scanner(System.in);
+		Long id = sc.nextLong();
 		sc.nextLine();
-		ContactRepository repository= new ContactRepository();
-//		repository.removeContact(id);
-		
-		repo.deleteById(id);
-		
-		
+		ContactRepository repository = new ContactRepository();
+		repository.removeContact(id);
+
 	}
-	
+
 }
