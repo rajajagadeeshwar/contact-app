@@ -3,7 +3,6 @@ package com.contactapp.service;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
-import java.util.Scanner;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -25,23 +24,15 @@ public class ContactService {
 	@Autowired
 	private Validator validator;
 
-	public void listAllContacts() {
+	public List<Contact> findAll() {
 
 		List<Contact> contacts = new ArrayList<>();
 		repository.findAll().forEach(contacts::add);
 
-		for (Contact contact : contacts) {
-			System.out.println(contact);
-			System.out.println();
-		}
+		return contacts;
 	}
 
-	public void findById() {
-
-		System.out.println("Input user id");
-		Scanner sc = new Scanner(System.in);
-
-		Long id = sc.nextLong();
+	public void findById(Long id) {
 
 		Contact contact = repository.findById(id).orElse(null);
 
@@ -55,80 +46,40 @@ public class ContactService {
 
 	}
 
-	public void editContact() {
+	public Contact editContact(Contact contactToEdit) {
 
-		System.out.println("Input user id");
-		Scanner sc = new Scanner(System.in);
-		Long id = sc.nextLong();
-		sc.nextLine();
+		Contact existingContact = repository.findById(contactToEdit.getId()).orElse(null);
+		if (Objects.isNull(existingContact)) {
+			System.out.println("Contact not found");
+			throw new IllegalArgumentException("Contact not found");
+		}
 
-		Contact contact = repository.findById(id).orElse(null);
+		validator.validatePhoneNumberLength(contactToEdit.getPhonenumber());
+		validator.validateDigits(contactToEdit.getPhonenumber());
+		validator.validateEmail(contactToEdit.getEmail());
 
-		System.out.println("Input the new name:");
-		String name = sc.nextLine();
+		String formattedPhoneNumber = formatter.formatPhoneNumber(contactToEdit.getPhonenumber());
+		contactToEdit.setPhonenumber(formattedPhoneNumber);
 
-		System.out.println("Input the new phone number:");
-		String phoneNumber = sc.nextLine();
-
-		System.out.println("Input the new business number:");
-		String businessNumber = sc.nextLine();
-
-		System.out.println("Input the new email:");
-		String email = sc.nextLine();
-
-		contact.setName(name);
-		contact.setPhonenumber(phoneNumber);
-		contact.setBusinessnumber(businessNumber);
-		contact.setEmail(email);
+		return repository.save(contactToEdit);
 
 	}
 
-	public void removeContactById() {
+	public void removeContactById(Long id) {
 
-		System.out.println("Enter the id to remove");
-		Scanner sc = new Scanner(System.in);
-		Long id = sc.nextLong();
-		sc.nextLine();
 		repository.deleteById(id);
 
 	}
 
-	public Contact createContact() {
-		Scanner sc = new Scanner(System.in);
+	public Contact createContact(Contact contact) {
+		validator.validatePhoneNumberLength(contact.getPhonenumber());
+		validator.validateDigits(contact.getPhonenumber());
+		validator.validateEmail(contact.getEmail());
 
-		System.out.println("Input your name:");
-		String name = sc.nextLine();
-		name = name.toUpperCase();
+		String formattedPhoneNumber = formatter.formatPhoneNumber(contact.getPhonenumber());
+		contact.setPhonenumber(formattedPhoneNumber);
 
-		System.out.println("Input your phone number:");
-		String phoneNumber = sc.nextLine();
-
-		validator.validatePhoneNumberLength(phoneNumber);
-
-		validator.validateDigits(phoneNumber);
-
-		phoneNumber = formatter.formatPhoneNumber(phoneNumber);
-
-		System.out.println(phoneNumber);
-
-		System.out.println("Input your business number:");
-		String businessNumber = sc.nextLine();
-
-		System.out.println("Input your email:");
-		String email = sc.nextLine();
-
-		validator.validateEmail(email);
-
-		Contact contact = new Contact();
-		contact.setName(name);
-		contact.setPhonenumber(phoneNumber);
-		contact.setBusinessnumber(businessNumber);
-		contact.setEmail(email);
-
-		repository.save(contact);
-
-		return contact;
-
+		return repository.save(contact);
 	}
 
 }
